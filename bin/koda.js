@@ -57,7 +57,7 @@ async function downloadAndExtract(url, dest) {
 program
   .name('koda')
   .description('CLI to manage koda-backend')
-  .version('1.0.3');
+  .version('1.0.4');
 
 program
   .command('setup')
@@ -226,6 +226,29 @@ program
       spinner.succeed(chalk.green('koda-backend uninstalled successfully!'));
     } catch (error) {
       spinner.fail(chalk.red('Failed to uninstall koda-backend: ' + error.message));
+    }
+  });
+
+program
+  .command('clear')
+  .description('Clear all files and folders inside koda-backend outputs directory')
+  .action(async () => {
+    const outputsDir = path.join(KODA_DIR, 'outputs');
+    const spinner = ora('Clearing outputs directory...').start();
+
+    if (!existsSync(outputsDir)) {
+      spinner.info(chalk.yellow('Outputs directory does not exist, nothing to clear.'));
+      return;
+    }
+
+    try {
+      const files = await fs.readdir(outputsDir);
+      for (const file of files) {
+        await fs.rm(path.join(outputsDir, file), { recursive: true, force: true });
+      }
+      spinner.succeed(chalk.green('Outputs directory cleared successfully!'));
+    } catch (error) {
+      spinner.fail(chalk.red('Failed to clear outputs directory: ' + error.message));
     }
   });
 
