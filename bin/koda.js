@@ -110,9 +110,8 @@ program
     }
 
     try {
-      // Use 'pnpm start' as the target for pm2
-      // For Windows compatibility, we might need to use pnpm.cmd or shell: true
-      await execa('pm2', ['start', 'pnpm', '--name', 'koda-backend', '--', 'start'], { 
+      // Use 'node main.js' as the target for pm2
+      await execa('pm2', ['start', 'main.js', '--name', 'koda-backend'], { 
         cwd: KODA_DIR,
         shell: true 
       });
@@ -184,7 +183,7 @@ program
       try {
         await execa('pm2', ['restart', 'koda-backend'], { shell: true });
       } catch {
-        await execa('pm2', ['start', 'pnpm', '--name', 'koda-backend', '--', 'start'], { 
+        await execa('pm2', ['start', 'main.js', '--name', 'koda-backend'], { 
           cwd: KODA_DIR,
           shell: true 
         });
