@@ -110,8 +110,15 @@ program
     }
 
     try {
-      // Use 'node main.js' as the target for pm2
-      await execa('pm2', ['start', 'main.js', '--name', 'koda-backend'], { 
+      // Delete existing process to clear old pnpm-based configuration
+      try {
+        await execa('pm2', ['delete', 'koda-backend'], { shell: true });
+      } catch {
+        // Ignore if process doesn't exist
+      }
+
+      // Use 'node' as the interpreter to run 'main.js' directly
+      await execa('pm2', ['start', 'main.js', '--name', 'koda-backend', '--interpreter', 'node'], { 
         cwd: KODA_DIR,
         shell: true 
       });
@@ -181,13 +188,14 @@ program
 
       spinner.text = 'Restarting koda-backend...';
       try {
-        await execa('pm2', ['restart', 'koda-backend'], { shell: true });
+        await execa('pm2', ['delete', 'koda-backend'], { shell: true });
       } catch {
-        await execa('pm2', ['start', 'main.js', '--name', 'koda-backend'], { 
-          cwd: KODA_DIR,
-          shell: true 
-        });
+        // Ignore
       }
+      await execa('pm2', ['start', 'main.js', '--name', 'koda-backend', '--interpreter', 'node'], { 
+        cwd: KODA_DIR,
+        shell: true 
+      });
 
       spinner.succeed(chalk.green('koda-backend updated and restarted successfully!'));
     } catch (error) {

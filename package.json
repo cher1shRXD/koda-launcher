@@ -1,6 +1,6 @@
 {
   "name": "koda-launcher",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI launcher for koda-backend",
   "type": "module",
   "bin": {
