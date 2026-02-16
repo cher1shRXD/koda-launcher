@@ -57,7 +57,7 @@ async function downloadAndExtract(url, dest) {
 program
   .name('koda')
   .description('CLI to manage koda-backend')
-  .version('1.0.0');
+  .version('1.0.3');
 
 program
   .command('setup')
